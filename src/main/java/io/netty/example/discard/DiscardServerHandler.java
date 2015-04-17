@@ -18,8 +18,12 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter { // (1)
                 System.out.print((char) in.readByte());
                 System.out.flush();
             }// also can  System.out.println(in.toString(io.netty.util.CharsetUtil.US_ASCII))
+            
+            ctx.write(msg); // Netty releases msg for you when it is written out to the wire.
+            ctx.flush(); // you could call ctx.writeAndFlush(msg) for brevity.
+            ctx.close();
         } finally {
-            ReferenceCountUtil.release(msg); // Alternatively, you could do in.release() here.
+//            ReferenceCountUtil.release(msg); // Alternatively, you could do in.release() here.
         }
     }
 
