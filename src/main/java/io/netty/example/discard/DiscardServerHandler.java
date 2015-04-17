@@ -1,9 +1,9 @@
 package io.netty.example.discard;
 
 import io.netty.buffer.ByteBuf;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
 
 /**
  * Handles a server-side channel.
@@ -12,8 +12,15 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter { // (1)
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
-        System.out.println(msg);
-        ((ByteBuf) msg).release(); 
+    	ByteBuf in = (ByteBuf) msg;
+        try {
+            while (in.isReadable()) { 
+                System.out.print((char) in.readByte());
+                System.out.flush();
+            }// also can  System.out.println(in.toString(io.netty.util.CharsetUtil.US_ASCII))
+        } finally {
+            ReferenceCountUtil.release(msg); // Alternatively, you could do in.release() here.
+        }
     }
 
     @Override
