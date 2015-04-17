@@ -13,7 +13,7 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter { // (1)
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
         System.out.println(msg);
-        ((ByteBuf) msg).release(); // (3)
+        ((ByteBuf) msg).release(); 
     }
 
     @Override
